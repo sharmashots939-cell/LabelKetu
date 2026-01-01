@@ -1,0 +1,90 @@
+This Software Requirements Specification (SRS) document outlines the design and functional requirements for Labelketu, a professional boutique e-commerce platform.
+
+Software Requirements Specification (SRS)
+Project Name: Labelketu
+Owner: Ketu Sharma
+
+Lead Developer: Abhinandan Sharma
+
+Version: 1.0
+
+Date: January 2026
+
+1. Introduction
+1.1 Purpose
+The purpose of this document is to provide a detailed description of the external and internal requirements for the Labelketu e-commerce platform. It will serve as a blueprint for the development of the system.
+
+1.2 Project Scope
+Labelketu is a specialized boutique website designed to provide a seamless shopping experience for customers and a robust management system for the owner. It consists of a customer-facing storefront and a data-driven administrative dashboard.
+
+2. Overall Description
+2.1 User Classes and Characteristics
+Customer: Browses products, manages profile, places orders, and tracks shipments.
+
+Admin (Ketu Sharma): Manages inventory, views sales analytics, handles order fulfillment, and moderates reviews.
+
+2.2 Operating Environment
+Web Server: Python-based (Flask/Django).
+
+Database: PostgreSQL or SQLite for structured data.
+
+Client: Any modern web browser (Chrome, Safari, Firefox).
+
+
+3. System Features
+3.1 User Panel (Customer Facing)
+Feature,Description
+Authentication,Secure Sign-up and Sign-in functionality using email and password.
+Product Wall,A visual catalog of boutique items with high-quality images and descriptions.
+Ordering System,"Shopping cart functionality and ""Place Order"" workflow."
+Order Tracking,"Real-time status updates (Processing, Shipped, Delivered)."
+Returns/Refunds,Interface for users to request returns within a specific timeframe.
+
+3.2 Admin Panel (Management Facing)
+
+Feature,Description
+Product Management,"Create, Read, Update, and Delete (CRUD) boutique products (title, price, image, stock)."
+Data Visualization,"Dashboards showing sales trends, popular products, and revenue metrics."
+Order Manipulation,"Ability to update order status, manage returns, and view customer records."
+Review Moderation,Manage product ratings and customer feedback to maintain brand quality.
+
+4. Functional Requirements
+4.1 Sales & Pricing Logic
+The system must calculate total order value including taxes and shipping fees.
+
+The system must allow the admin to set discount codes or promotional prices.
+
+4.2 Data Visualization Requirements
+Sales Report: Bar charts or line graphs showing daily/monthly revenue.
+
+Product Performance: Pie charts showing the most sold categories/items.
+
+Rating Analytics: Average star rating per product to identify customer satisfaction levels.
+
+5. Non-Functional Requirements
+5.1 Security
+Passwords: Must be hashed before being stored in the database.
+
+Access Control: The Admin Panel must be strictly inaccessible to regular users via URL guarding.
+
+5.2 Performance
+Product images must be optimized for fast loading (Simple & Accessible).
+
+The website should respond to user queries within 2 seconds.
+
+5.3 Usability
+Mobile-responsive design to allow shopping on smartphones.
+
+Intuitive navigation for non-technical users.
+
+6. Project Credits
+This website and its underlying architecture are developed and maintained by:
+
+Abhinandan Sharma > Lead Full-Stack Developer
+
+7. Future Scalability
+Integration of payment gateways (Stripe/PayPal).
+
+Automated email notifications for order confirmations.
+
+AI-based product recommendations based on user browsing history.
