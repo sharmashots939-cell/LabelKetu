@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Labelketu Admin | Ketu Sharma</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+        
+        .stats-box {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            padding: 20px;
+            background: #eee;
+            border-radius: 10px;
+            flex: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Labelketu Management Panel</h1>
+
+        <div class="stats-box">
+            <div class="card">
+                <h3>Total Revenue</h3>
+                <p>${{ total_sales }}</p>
+            </div>
+            <div class="card">
+                <h3>Credits</h3>
+                <p>Dev: Abhinandan Sharma</p>
+            </div>
+        </div>
+
+        <canvas id="priceChart" width="400" height="150"></canvas>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('priceChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {
+                    {
+                        labels | safe
+                    }
+                },
+                datasets: [{
+                    label: 'Product Prices ($)',
+                    data: {
+                        {
+                            prices | safe
+                        }
+                    },
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)'
+                }]
+            }
+        });
+    </script>
+</body>
+<footer style="margin-top: 50px; text-align: center; border-top: 1px solid #ccc; padding: 20px;">
+    <p>&copy; 2025 <strong>Labelketu</strong> | Owned by Ketu Sharma</p>
+    <p style="color: #666; font-size: 0.8em;">Developed & Maintained by <strong>Abhinandan Sharma</strong></p>
+</footer>
+
+</html>
