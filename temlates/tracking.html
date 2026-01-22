@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders | Labelketu</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 40px;
+            background: #f9f9f9;
+        }
+        
+        .order-card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            position: relative;
+        }
+        
+        .step {
+            font-size: 0.8em;
+            color: #ccc;
+            font-weight: bold;
+        }
+        
+        .step.active {
+            color: #27ae60;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Your Orders</h1>
+
+    {% for order in orders %}
+    <div class="order-card">
+        <h3>Order #LK-{{ order.id }} - {{ order.product.name }}</h3>
+        <p>Ordered on: {{ order.date_ordered.strftime('%Y-%m-%d') }}</p>
+        <p>Total: ${{ order.amount }}</p>
+
+        <div class="status-bar">
+            <span class="step {% if order.status in ['Processing', 'Dispatched', 'Delivered'] %}active{% endif %}">● Processing</span>
+            <span class="step {% if order.status in ['Dispatched', 'Delivered'] %}active{% endif %}">● Dispatched</span>
+            <span class="step {% if order.status == 'Delivered' %}active{% endif %}">● Delivered</span>
+        </div>
+        <p style="margin-top: 15px;">Current Status: <strong>{{ order.status }}</strong></p>
+    </div>
+    {% endfor %} {% if order.status == 'Delivered' %}
+    <div style="margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 10px;">
+        <form action="{{ url_for('request_return', order_id=order.id) }}" method="POST">
+            <label style="font-size: 0.8em; color: #555;">Reason for return:</label><br>
+            <input type="text" name="reason" placeholder="Wrong size, damaged, etc." required style="width: 70%; padding: 5px; margin-bottom: 5px;">
+            <button type="submit" style="background: #e67e22; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+            Request Return
+        </button>
+        </form>
+    </div>
+    {% elif order.status == 'Return Requested' %}
+    <p style="color: #e67e22; font-weight: bold;">⚠️ Return Request Pending Review</p>
+    {% endif %}
+    <footer style="margin-top: 50px; text-align: center;">
+        <p>Developed by <strong>Abhinandan Sharma</strong></p>
+    </footer>
+</body>
+
+</html>

@@ -1,52 +1,265 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Labelketu Admin | Ketu Sharma</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        
         .container {
-            width: 80%;
-            margin: auto;
+            width: 85%;
+            margin: 40px auto;
+        }
+        
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
         }
         
         .stats-box {
             display: flex;
             gap: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
         
         .card {
             padding: 20px;
-            background: #eee;
-            border-radius: 10px;
+            background: #ffffff;
+            border-radius: 12px;
             flex: 1;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .card h3 {
+            margin-top: 0;
+            color: #666;
+            font-size: 0.9em;
+            text-transform: uppercase;
+        }
+        
+        .card p {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 10px 0 0 0;
+            color: #2c3e50;
+        }
+        
+        .charts-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            border-top: 1px solid #ddd;
+            padding: 30px;
+            background: #fff;
+        }
+        
+        .footer-credit {
+            color: #888;
+            font-size: 0.85em;
+            margin-top: 5px;
         }
     </style>
 </head>
 
 <body>
+    <div class="product-management" style="margin-top: 50px;">
+        <h2>Inventory Management</h2>
+        <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <thead>
+                <tr style="background: #333; color: white; text-align: left;">
+                    <th style="padding: 15px;">Product ID</th>
+                    <th style="padding: 15px;">Name</th>
+                    <th style="padding: 15px;">Price</th>
+                    <th style="padding: 15px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 15px;">#{{ product.id }}</td>
+                    <td style="padding: 15px;">{{ product.name }}</td>
+                    <td style="padding: 15px;">${{ product.price }}</td>
+                    <td style="padding: 15px;">
+                        <a href="{{ url_for('edit_product', id=product.id) }}" style="background: #f39c12; color: white; padding: 5px 10px; text-decoration: none; border-radius: 4px; margin-right: 5px;">Edit</a>
+
+                        <form action="{{ url_for('delete_product', id=product.id) }}" method="POST" style="display:inline;">
+                            <button type="submit" onclick="return confirm('Are you sure you want to delete this?')" style="background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     <div class="container">
         <h1>Labelketu Management Panel</h1>
 
         <div class="stats-box">
             <div class="card">
                 <h3>Total Revenue</h3>
-                <p>${{ total_sales }}</p>
+                <p>${{ "{:,.2f}".format(total_sales) }}</p>
             </div>
             <div class="card">
-                <h3>Credits</h3>
-                <p>Dev: Abhinandan Sharma</p>
+                <h3>Owner</h3>
+                <p>Ketu Sharma</p>
+            </div>
+            <div class="card">
+                <h3>Developer Credits</h3>
+                <p style="font-size: 1.1em;">Abhinandan Sharma</p>
             </div>
         </div>
 
-        <canvas id="priceChart" width="400" height="150"></canvas>
-    </div>
+        <div class="charts-wrapper">
+            <div class="chart-container">
+                <h3>Product Pricing ($)</h3>
+                <canvas id="priceChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Customer Ratings</h3>
+                <canvas id="ratingChart"></canvas>
+            </div>
+        </div>
+        <div class="container">
+            <h1>Labelketu Command Center</h1>
 
+            <div class="admin-section">
+                <h3>📂 Manage Categories</h3>
+                <form action="/admin/category/add" method="POST" style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <input type="text" name="name" placeholder="New Category (e.g., Saree)" required>
+                    <button type="submit" style="background: #8e44ad; color: white; border: none; padding: 10px;">Add Category</button>
+                </form>
+            </div>
+
+            <div class="admin-section">
+                <h3>👗 Product Inventory</h3>
+                <form action="/add" method="POST" enctype="multipart/form-data" class="add-form">
+                    <input type="text" name="name" placeholder="Item Name" required>
+                    <input type="number" name="price" placeholder="Price" required>
+                    <select name="category_id">
+                {% for cat in categories %}
+                <option value="{{ cat.id }}">{{ cat.name }}</option>
+                {% endfor %}
+            </select>
+                    <input type="file" name="image" required>
+                    <button type="submit" style="background: #27ae60; color: white; border: none; padding: 10px;">Upload Item</button>
+                </form>
+            </div>
+
+            <div class="admin-section">
+                <h3>🚚 Order Fulfillment & Dispatch</h3>
+                <table style="width: 100%; text-align: left; border-collapse: collapse;">
+                    <tr style="background: #eee;">
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Item</th>
+                        <th>Status</th>
+                        <th>Update Dispatch</th>
+                    </tr>
+                    {% for order in orders %}
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td>#LK-{{ order.id }}</td>
+                        <td>{{ order.user.username }}</td>
+                        <td>{{ order.product.name }}</td>
+                        <td><strong>{{ order.status }}</strong></td>
+                        <td>
+                            <form action="{{ url_for('update_order_status', id=order.id) }}" method="POST">
+                                <select name="status" onchange="this.form.submit()">
+                            <option value="Processing" {% if order.status == 'Processing' %}selected{% endif %}>Processing</option>
+                            <option value="Dispatched" {% if order.status == 'Dispatched' %}selected{% endif %}>Dispatched</option>
+                            <option value="Delivered" {% if order.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                            <option value="Returned" {% if order.status == 'Returned' %}selected{% endif %}>Returned</option>
+                        </select>
+                            </form>
+                        </td>
+                        <td>
+                            {% if order.status == 'Return Requested' %}
+                            <span style="color: #d35400;">Reason: {{ order.return_reason }}</span> {% else %} {{ order.status }} {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+            <footer class="footer">
+                <p>Owner: <strong>Ketu Sharma</strong> | Developer: <strong>Abhinandan Sharma</strong></p>
+            </footer>
+        </div>
+
+        <footer class="footer">
+            <p>&copy; 2026 <strong>Labelketu</strong> | Owned by Ketu Sharma</p>
+            <p class="footer-credit">Designed, Developed & Maintained by <strong>Abhinandan Sharma</strong></p>
+        </footer>
+    </div>
     <script>
-        const ctx = document.getElementById('priceChart').getContext('2d');
-        new Chart(ctx, {
+        // 1. PRICE CHART LOGIC (Bar Chart)
+        // This displays the prices of different boutique items
+        const priceCtx = document.getElementById('priceChart').getContext('2d');
+        new Chart(priceCtx, {
             type: 'bar',
+            data: {
+                labels: {
+                    {
+                        labels | safe
+                    }
+                }, // Jinja2 outputs the list of product names
+                datasets: [{
+                    label: 'Unit Price ($)',
+                    data: {
+                        {
+                            prices | safe
+                        }
+                    }, // Jinja2 outputs the list of prices
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true // Ensures the chart is easy to read
+                    }
+                }
+            }
+        });
+        .admin - section {
+                background: white;padding: 20 px;border - radius: 8 px;margin - bottom: 30 px;box - shadow: 0 2 px 5 px rgba(0, 0, 0, 0.1);
+            }
+            .add - form input, .add - form select {
+                padding: 8 px;margin - right: 5 px;
+            }
+        th, td {
+            padding: 12 px;
+        }
+        // 2. RATINGS CHART LOGIC (Line Chart)
+        // This visualizes customer satisfaction across products
+        const ratingCtx = document.getElementById('ratingChart').getContext('2d');
+        new Chart(ratingCtx, {
+            type: 'line',
             data: {
                 labels: {
                     {
@@ -54,21 +267,29 @@
                     }
                 },
                 datasets: [{
-                    label: 'Product Prices ($)',
+                    label: 'Customer Rating (out of 5)',
                     data: {
                         {
-                            prices | safe
+                            ratings | safe
                         }
-                    },
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)'
+                    }, // Jinja2 outputs the list of ratings
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    fill: true,
+                    tension: 0.4 // Gives the line a smooth, professional curve
                 }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        min: 0,
+                        max: 5 // Since ratings are usually 0-5
+                    }
+                }
             }
         });
     </script>
 </body>
-<footer style="margin-top: 50px; text-align: center; border-top: 1px solid #ccc; padding: 20px;">
-    <p>&copy; 2025 <strong>Labelketu</strong> | Owned by Ketu Sharma</p>
-    <p style="color: #666; font-size: 0.8em;">Developed & Maintained by <strong>Abhinandan Sharma</strong></p>
-</footer>
 
 </html>

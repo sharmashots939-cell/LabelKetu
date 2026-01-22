@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed | Labelketu</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        
+        .success-card {
+            border: 1px solid #ddd;
+            display: inline-block;
+            padding: 30px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="success-card">
+        <h1>🎉 Thank You, {{ current_user.username }}!</h1>
+        <p>Your order for <strong>{{ order.product.name }}</strong> has been placed.</p>
+        <p>Order ID: #LK-{{ order.id }}</p>
+        <p>Status: {{ order.status }}</p>
+        <br>
+        <a href="/">Continue Shopping</a>
+    </div>
+
+    <footer style="margin-top: 50px;">
+        <p>Developed by <strong>Abhinandan Sharma</strong></p>
+    </footer>
+</body>
+
+</html>
